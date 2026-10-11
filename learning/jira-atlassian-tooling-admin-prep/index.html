@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jira &amp; Atlassian tooling admin: interview prep</title>
+<style>
+  :root { --bg:#fff; --fg:#111; --muted:#555; --rule:#ddd; --soft:#f5f5f2; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#141414; --fg:#e8e8e6; --muted:#a0a09c; --rule:#333; --soft:#1e1e1d; }
+  }
+  html { background: var(--bg); color: var(--fg); }
+  body { max-width: 44rem; margin: 3rem auto; padding: 0 1.25rem;
+         font: 1rem/1.65 Georgia, 'Times New Roman', serif; }
+  h1 { font-size: 1.6rem; font-weight: normal; margin-bottom: .25rem; }
+  h2 { font-size: 1.25rem; font-weight: normal; margin-top: 2.75rem;
+       padding-top: 1rem; border-top: 1px solid var(--rule); }
+  h3 { font-size: 1.02rem; margin: 1.6rem 0 .3rem; }
+  a { color: var(--fg); }
+  .lede { color: var(--muted); margin-top: 0; }
+  nav ol { columns: 2; column-gap: 2rem; padding-left: 1.2rem; }
+  nav li { break-inside: avoid; }
+  code { font-size: .88em; overflow-wrap: anywhere; }
+  pre { background: var(--soft); padding: .8rem 1rem; overflow-x: auto;
+        font-size: .85rem; line-height: 1.45; border-radius: 4px; }
+  pre code { font-size: inherit; }
+  table { border-collapse: collapse; width: 100%; font-size: .93rem; margin: .8rem 0; }
+  th, td { border-bottom: 1px solid var(--rule); padding: .45rem .5rem .45rem 0;
+           text-align: left; vertical-align: top; }
+  th { font-weight: bold; }
+  .wrap { overflow-x: auto; }
+  .key { background: var(--soft); border-left: 3px solid var(--fg);
+         padding: .6rem .9rem; margin: 1rem 0; }
+  blockquote { margin: 1rem 0; padding: .2rem 0 .2rem 1rem;
+               border-left: 3px solid var(--rule); color: var(--fg); font-style: italic; }
+  details { border-bottom: 1px solid var(--rule); padding: .55rem 0; }
+  summary { cursor: pointer; font-weight: bold; }
+  details > *:not(summary) { margin-top: .5rem; }
+  footer { margin-top: 3rem; color: var(--muted); font-size: .9rem; }
+  @media (max-width: 34rem) { nav ol { columns: 1; } }
+</style>
+</head>
+<body>
+
+<h1>Jira &amp; Atlassian tooling admin: interview prep</h1>
+<p class="lede">A one-page study guide for software-tooling support roles that administer Jira, Confluence, Bitbucket, Jenkins, Bamboo and Artifactory for R&amp;D teams.</p>
+
+<nav>
+<ol>
+  <li><a href="#role">What the role really is</a></li>
+  <li><a href="#study">What to study</a></li>
+  <li><a href="#confluence">Confluence</a></li>
+  <li><a href="#project-types">Company- vs team-managed</a></li>
+  <li><a href="#permissions">Jira permissions</a></li>
+  <li><a href="#lab">Hands-on Jira Cloud lab</a></li>
+  <li><a href="#qa">Jira Q&amp;A (20 answers)</a></li>
+  <li><a href="#bank">Other question bank</a></li>
+  <li><a href="#cicd">CI/CD story checklist</a></li>
+  <li><a href="#plan">7-day plan</a></li>
+</ol>
+</nav>
+
+<h2 id="role">1. What the role really is</h2>
+<p>It's a <strong>developer-tools platform admin and support</strong> role, not hands-on infrastructure DevOps. You own the tools R&amp;D engineers use every day: keep them running, configure them, handle tickets within SLAs, test upgrades and migrations, and improve how engineers work.</p>
+<p>Roles like this often rate candidates higher if they can <strong>script (Python/JS)</strong> and understand how the applications are built. Frame automation work as "productivity and developer-experience improvements."</p>
+
+<h2 id="study">2. What to study</h2>
+<div class="wrap"><table>
+<tr><th>Area</th><th>Know this</th></tr>
+<tr><td>Jira admin <em>(most important)</em></td><td>Projects, issue types, custom fields, screens; workflow / permission / notification / field-configuration schemes; statuses, transitions, conditions, validators, post functions; JQL, filters, dashboards; Scrum vs Kanban; Automation; Jira Service Management basics (queues, SLAs)</td></tr>
+<tr><td>Confluence</td><td>Spaces, space vs page permissions, templates, macros, Jira linking</td></tr>
+<tr><td>Bitbucket</td><td>Branch permissions, merge checks, PR workflow, webhooks, Gitflow vs trunk-based, SSH keys vs access tokens</td></tr>
+<tr><td>Jenkins / Bamboo</td><td>Declarative Jenkinsfile, agents, shared libraries, credentials, plugin management, safe upgrades; Bamboo plans → stages → jobs → tasks, deployment projects</td></tr>
+<tr><td>Artifactory</td><td>Local, remote and virtual repositories; Maven/npm/Docker repos; permissions; cleanup and retention</td></tr>
+<tr><td>Platform lifecycle</td><td>Server licences ended Feb 2024 → Data Center or Cloud; Marketplace apps (ScriptRunner); SSO/LDAP group sync; upgrades on a test instance first</td></tr>
+<tr><td>ITIL / ITSM</td><td>Incident vs service request vs problem vs change; SLAs; CAB; UAT; runbooks and knowledge articles</td></tr>
+<tr><td>Scripting</td><td>Python against the Jira/Bitbucket REST API; basic Groovy for Jenkins and ScriptRunner</td></tr>
+</table></div>
+
+<h2 id="confluence">3. Confluence</h2>
+<p>Atlassian's team wiki. <strong>Jira tracks the work; Confluence holds the knowledge about the work.</strong></p>
+<h3>Structure</h3>
+<p><strong>Site</strong> → <strong>Spaces</strong> (one per team/product, own permissions) → <strong>Pages</strong> (a tree with parent/child pages and version history) + <strong>blog posts</strong>.</p>
+<h3>Permissions: three layers</h3>
+<ol>
+  <li><strong>Global:</strong> who can use Confluence and create spaces.</li>
+  <li><strong>Space:</strong> view, add, edit, delete, administer. Grant to <em>groups</em>.</li>
+  <li><strong>Page restrictions:</strong> lock one page for view/edit. A restriction on a parent applies to its children.</li>
+</ol>
+<div class="key">"A user can't see a page": licence → group with space access → restriction on the page <em>or any parent page</em>.</div>
+<h3>Features to know</h3>
+<ul>
+  <li><strong>Templates and blueprints</strong> for meeting notes, decision logs, retros, how-tos.</li>
+  <li><strong>Macros:</strong> Jira Issues (live JQL list), Page Tree, Excerpt/Include, status labels, code blocks, panels.</li>
+  <li><strong>Labels and search</strong> to keep knowledge findable; <strong>Jira integration</strong> (link issues, create issues from text, requirement pages on epics).</li>
+</ul>
+<h3>What an admin does</h3>
+<p>Creates spaces and permissions for new teams, manages LDAP/SSO-synced groups, maintains templates, archives stale spaces, manages Marketplace apps (e.g. draw.io), plans upgrades or Cloud migrations on staging first, answers how-to tickets.</p>
+<h3>Likely questions</h3>
+<ul>
+  <li>Set up a space for a new R&amp;D team.</li>
+  <li>Keep docs from going stale: owners, review dates, archiving, templates.</li>
+  <li>Move docs between spaces: move/copy, export/import, fix broken links.</li>
+  <li>Confluence is slow: attachment size, heavy macros, logs, database, JVM memory (Data Center).</li>
+</ul>
+
+<h2 id="project-types">4. Company-managed vs team-managed projects</h2>
+<p>Think of an apartment building. <strong>Company-managed</strong> is a building where management sets the rules for every flat: change the lock design once and every flat gets it. <strong>Team-managed</strong> is an independent house: the owner decides everything, quickly, but nothing is shared. (Newer Jira screens may call projects "spaces.")</p>
+<div class="wrap"><table>
+<tr><th></th><th>Company-managed</th><th>Team-managed</th></tr>
+<tr><td>Configured by</td><td>Jira admins</td><td>The team's project admin</td></tr>
+<tr><td>Workflows, fields, screens</td><td>Shared schemes reused by many projects</td><td>Inside one project, not shared</td></tr>
+<tr><td>Changing one thing</td><td>Affects every project using that scheme</td><td>Affects only that project</td></tr>
+<tr><td>Permissions</td><td>Permission schemes with roles and groups</td><td>Simple access level + Admin / Member / Viewer</td></tr>
+<tr><td>Best for</td><td>Large organizations needing standards</td><td>Small, independent teams</td></tr>
+</table></div>
+<p><strong>Example:</strong> 50 R&amp;D projects must share one Bug process. Company-managed: build one workflow scheme, attach it to all 50, edit once. Team-managed: 50 slightly different workflows, edited 50 times.</p>
+<blockquote>"Company-managed projects are configured centrally by admins using shared schemes, so one configuration gives consistency across many projects. Team-managed projects are configured by the team itself and aren't shared. For many R&amp;D teams, company-managed is the right choice, and it's where most admin work happens."</blockquote>
+<p><strong>Converting?</strong> No direct switch: create a project of the other type and move the issues, then check field and status mapping.</p>
+
+<h2 id="permissions">5. Jira permissions</h2>
+<p>Four layers, like airport checkpoints. A user must pass every one.</p>
+<ol>
+  <li><strong>Product access:</strong> do they have a Jira licence? (admin.atlassian.com)</li>
+  <li><strong>Global permissions:</strong> site-wide powers: Administer Jira, browse users and groups, share dashboards/filters, bulk change, create team-managed projects. Give sparingly.</li>
+  <li><strong>Project permissions (permission scheme):</strong> what they can do inside a project. Most tickets come from here.</li>
+  <li><strong>Issue security:</strong> optional lock on individual issues (e.g. security bugs).</li>
+</ol>
+<h3>Key project permissions</h3>
+<div class="wrap"><table>
+<tr><th>Permission</th><th>Allows</th></tr>
+<tr><td>Browse Projects</td><td>See the project and its issues. Without it, the project is invisible.</td></tr>
+<tr><td>Create / Edit Issues</td><td>Create new issues / edit fields</td></tr>
+<tr><td>Transition Issues</td><td>Move issues through the workflow</td></tr>
+<tr><td>Assign Issues / Assignable User</td><td>Assign to others / be assigned</td></tr>
+<tr><td>Resolve / Close Issues</td><td>Set resolution, close</td></tr>
+<tr><td>Delete Issues</td><td>Delete (usually admins only)</td></tr>
+<tr><td>Administer Projects</td><td>Manage roles, components, versions</td></tr>
+<tr><td>Manage Sprints</td><td>Start and complete sprints</td></tr>
+</table></div>
+<p>Grant to: <strong>project role</strong> (best), group, user (avoid), or special entries like Reporter, Current Assignee, Any logged-in user, Public (avoid).</p>
+<h3>Groups vs project roles</h3>
+<p><strong>Groups</strong> are site-wide and usually synced from AD/SSO. <strong>Roles</strong> are per project. A scheme says "Developers can edit issues"; each project fills its own Developers role. So one scheme serves hundreds of projects.</p>
+<div class="key">Best practice: scheme → grant to <strong>roles</strong> → projects add <strong>groups</strong> to roles → groups come from <strong>AD/SSO</strong>, so offboarding removes access automatically.</div>
+<h3>Troubleshooting flow</h3>
+<ol>
+  <li>Product access (licence).</li>
+  <li><strong>Permission Helper</strong> (admin): enter user, project, permission; it explains exactly why.</li>
+  <li>Role and group membership.</li>
+  <li>Issue security level on that issue.</li>
+  <li>Can't move an issue? Check the <strong>workflow condition</strong> on that transition, not just permissions.</li>
+</ol>
+<h3>Best practices</h3>
+<ul>
+  <li>Copy the default scheme before editing; use few, standard schemes.</li>
+  <li>Least privilege for Delete Issues and Administer Jira.</li>
+  <li>Audit via the audit log; remove inactive users to free licences.</li>
+</ul>
+<p>Related settings: <strong>notification scheme</strong> (who gets emailed on which events), <strong>issue security scheme</strong>, <strong>field configuration</strong> (required/hidden fields — often confused with permissions).</p>
+
+<h2 id="lab">6. Hands-on Jira Cloud lab (about 4–5 hours)</h2>
+<p>Newer Jira Cloud screens call issues <strong>"work items."</strong></p>
+<h3>Step 0 — Set up</h3>
+<p>Sign up for free Jira Cloud and invite a second user (another email) to test permissions. If admin features are greyed out on Free, start the Standard trial.</p>
+<h3>Step 1 — Project</h3>
+<p>Create a <strong>Scrum, company-managed</strong> project, e.g. "R&amp;D Tools", key <code>RDT</code>.</p>
+<h3>Step 2 — Use it as a user</h3>
+<p>Create an Epic, three Stories, two Bugs, a Sub-task. Create and start a sprint. Move cards across the board. Add Components (Firmware, Mobile App) and a Version (v1.0).</p>
+<h3>Step 3 — Custom fields and screens</h3>
+<p>Create a select-list field "Affected Environment" (Dev, QA, Prod), add it to the project's screens, confirm it shows on a Bug.</p>
+<div class="key">Screen → Screen scheme (create/edit/view) → Issue type screen scheme (per issue type) → project. Also check the field's <strong>context</strong>.</div>
+<h3>Step 4 — Custom workflow: only QA can close bugs</h3>
+<ol>
+  <li>Copy the workflow as "RDT Bug Workflow": <code>Open → In Progress → In Review → QA Testing → Closed</code>, plus Reopen.</li>
+  <li>On Close add a <strong>condition</strong> (User is in group <code>qa-team</code>), a <strong>validator</strong> (Resolution required) and a <strong>post function</strong> (set resolution).</li>
+  <li>Map Bug to it in a workflow scheme, attach to RDT, map old statuses.</li>
+  <li>Test with a user outside and then inside <code>qa-team</code>.</li>
+</ol>
+<div class="key"><strong>Conditions hide, validators block, post functions act.</strong></div>
+<h3>Step 5 — Permissions and roles</h3>
+<p>Copy the default permission scheme, grant to roles, attach to RDT. Remove Browse Projects from your second user's role, confirm the project disappears, check the Permission Helper, restore.</p>
+<h3>Step 6 — JQL, filters, dashboards</h3>
+<pre><code>project = RDT AND issuetype = Bug AND status != Closed
+assignee = currentUser() AND sprint in openSprints()
+created &gt;= -7d AND priority in (High, Highest)
+project = RDT AND updated &lt;= -30d AND statusCategory != Done</code></pre>
+<p>Save one as a filter; build a dashboard with Filter results and a pie chart.</p>
+<h3>Step 7 — Automation</h3>
+<ul>
+  <li>Highest-priority Bug created → assign and comment.</li>
+  <li>All sub-tasks done → transition parent to Done.</li>
+  <li>Weekly: issues not updated in 30 days → comment pinging the assignee.</li>
+</ul>
+<p>Use each rule's audit log to debug rules that didn't fire.</p>
+<h3>Step 8 — Python against the REST API</h3>
+<pre><code>import requests
+from requests.auth import HTTPBasicAuth
+
+SITE = "https://your-site.atlassian.net"
+auth = HTTPBasicAuth("you@example.com", "YOUR_API_TOKEN")
+
+r = requests.get(
+    f"{SITE}/rest/api/3/search/jql",
+    params={"jql": "project = RDT AND issuetype = Bug AND statusCategory != Done",
+            "fields": "summary,status,assignee"},
+    auth=auth,
+)
+r.raise_for_status()
+for issue in r.json()["issues"]:
+    f = issue["fields"]
+    who = f["assignee"]["displayName"] if f["assignee"] else "Unassigned"
+    print(issue["key"], "|", f["status"]["name"], "|", who, "|", f["summary"])</code></pre>
+<p>Create the token at id.atlassian.com → Security → API tokens. Check Atlassian's REST docs if an endpoint has changed.</p>
+
+<h2 id="qa">7. Jira Q&amp;A — 20 answers to say out loud</h2>
+
+<details><summary>1. What is Jira?</summary>
+<p>Atlassian's work-tracking tool. Teams plan, track and release work through projects, issues (work items), workflows and boards, usually with Scrum or Kanban, integrated with Confluence, Bitbucket and CI tools.</p></details>
+
+<details><summary>2. Team-managed vs company-managed?</summary>
+<p>Team-managed: configured by the team, simple, nothing shared. Company-managed: controlled by admins through shared schemes, so one configuration serves many projects consistently.</p></details>
+
+<details><summary>3. What is a scheme? Name the main ones.</summary>
+<p>A reusable configuration attached to projects: workflow, permission, notification, issue type, issue type screen, field configuration, issue security.</p></details>
+
+<details><summary>4. What is a workflow?</summary>
+<p>The statuses an issue moves through and the transitions between them. Transitions can carry conditions, validators and post functions.</p></details>
+
+<details><summary>5. Conditions vs validators vs post functions?</summary>
+<p>A condition controls whether a user <em>sees</em> the transition. A validator checks input before it completes. A post function runs after it. Conditions hide, validators block, post functions act.</p></details>
+
+<details><summary>6. How do you make sure only QA can close bugs?</summary>
+<p>Copy the Bug workflow, add "User is in group qa-team" on Close, map Bug to it in the workflow scheme, publish, test with users inside and outside the group.</p></details>
+
+<details><summary>7. A user can't see a project — troubleshoot.</summary>
+<p>Licence → Browse Projects in the permission scheme → are they in that role/group → issue security if it's specific issues. Use the Permission Helper.</p></details>
+
+<details><summary>8. A field doesn't appear on the Create screen — why?</summary>
+<p>Trace screen → screen scheme (Create) → issue type screen scheme for this issue type → field context → field configuration (hidden?).</p></details>
+
+<details><summary>9. Groups vs project roles?</summary>
+<p>Groups are site-wide (often AD/SSO). Roles are per project. Grant permissions to roles, put groups in roles, so one scheme serves hundreds of projects.</p></details>
+
+<details><summary>10. Add a new status without breaking existing issues?</summary>
+<p>Edit a draft/copy, add the status and transitions, publish; Jira asks you to map existing issues from removed statuses. Test on a test project first and tell users.</p></details>
+
+<details><summary>11. JQL: open high-priority bugs from the last 7 days</summary>
+<pre><code>project = RDT AND issuetype = Bug AND priority in (High, Highest)
+AND statusCategory != Done AND created &gt;= -7d</code></pre>
+<p><code>statusCategory</code> works across different workflows.</p></details>
+
+<details><summary>12. Example automation rule?</summary>
+<p>Highest-priority Bug created → assign to on-call lead and comment. Or: all sub-tasks done → parent to Done. Debug with the rule's audit log.</p></details>
+
+<details><summary>13. Epic vs story vs task vs sub-task vs bug?</summary>
+<p>Epic: large body of work across sprints. Story: user-facing requirement. Task: technical work. Bug: defect. Sub-task: breakdown of any of these.</p></details>
+
+<details><summary>14. Scrum board vs Kanban board?</summary>
+<p>Scrum: time-boxed sprints, backlog, planning, velocity. Kanban: continuous flow with WIP limits, suits support and ops.</p></details>
+
+<details><summary>15. Components vs versions vs labels?</summary>
+<p>Components: sub-parts of a project, can have default assignees. Versions: releases. Labels: free-text tags, messy at scale.</p></details>
+
+<details><summary>16. Bulk-update 200 issues?</summary>
+<p>Simple: bulk edit from search results. Complex or repeatable: Python against the REST API with an API token; test on a few issues and log changes.</p></details>
+
+<details><summary>17. Jira Cloud vs Data Center?</summary>
+<p>Cloud: hosted by Atlassian, automatic upgrades. Data Center: self-hosted, more control, clustering, more admin work. Server licences ended Feb 2024.</p></details>
+
+<details><summary>18. Plan a Data Center upgrade?</summary>
+<p>Release notes and app compatibility → back up DB and home directory → upgrade staging and run UAT → announce a maintenance window → upgrade prod → validate, with rollback ready → document.</p></details>
+
+<details><summary>19. Jira is slow — where do you start?</summary>
+<p>Scope it (everyone or one board/filter), heavy JQL in filters and dashboards, large boards, misbehaving automation or apps; on Data Center, logs, JVM memory, database.</p></details>
+
+<details><summary>20. Request to add a custom field?</summary>
+<p>Check whether an existing field covers it (too many fields slow Jira). If needed, create it with the narrowest context and add it only to relevant screens.</p></details>
+
+<p><strong>Practise 5, 7 and 8 out loud</strong> — they come up most.</p>
+
+<h2 id="bank">8. Other question bank</h2>
+<h3>Bitbucket, Jenkins, Bamboo, Artifactory</h3>
+<ul>
+  <li>Protect main: branch permissions + merge checks (required approvals, passing build).</li>
+  <li>Gitflow vs trunk-based development.</li>
+  <li>Declarative vs scripted Jenkins pipelines; agents; shared libraries.</li>
+  <li>Build fails on one agent only: tool versions, disk space, credentials, network, workspace.</li>
+  <li>Safe Jenkins/plugin upgrade: backup, staging, compatibility check, rollback plan.</li>
+  <li>Bamboo vs Jenkins: Bamboo integrates natively with Jira/Bitbucket; Jenkins is open source and plugin-heavy.</li>
+  <li>Artifactory local / remote / virtual repos; control storage with retention and cleanup policies.</li>
+  <li>GitHub Actions → Jenkins mapping: workflow file ≈ Jenkinsfile, runners ≈ agents, secrets ≈ credentials.</li>
+</ul>
+<h3>Platform and support</h3>
+<ul>
+  <li>Cloud vs Data Center migration; evaluating a Marketplace app; users at scale via SSO/AD groups.</li>
+  <li>Incident vs service request vs problem vs change; SLAs; prioritise by impact × urgency.</li>
+  <li>Tool down for 500 engineers, first 30 minutes: acknowledge, communicate, triage, escalate, restore, then root cause.</li>
+  <li>Documenting changes: change record, runbook, knowledge article.</li>
+</ul>
+<h3>Behavioural (prepare STAR stories)</h3>
+<p>An incident under pressure · automating a repetitive task · a difficult stakeholder · learning a new tool quickly · a deployment that went wrong.</p>
+<h3>Questions to ask them</h3>
+<p>Cloud or Data Center, any migration planned? How big is the user base and the tooling team? Mostly tickets or improvement projects?</p>
+
+<h2 id="cicd">9. CI/CD project story — checklist</h2>
+<p>A strong story covers three layers, then rollback and results:</p>
+<ol>
+  <li><strong>PR gate:</strong> branch protection, required review approval, merge only when checks pass.</li>
+  <li><strong>CI on every PR:</strong> build, unit tests (developers write them, the pipeline enforces them), code-quality scan with a quality gate, image build. Results show on the PR.</li>
+  <li><strong>CD after merge:</strong> immutable image tag (version + commit SHA), push to registry, promote the <em>same</em> artifact Dev → QA → Prod with a manual approval before prod. Never rebuild for prod.</li>
+  <li><strong>Rollback:</strong> redeploy the previous tag; on Kubernetes, <code>kubectl rollout undo</code>; on Azure App Service, deployment-slot swap.</li>
+  <li><strong>Results:</strong> before/after numbers, even rough ones.</li>
+</ol>
+<h3>Gaps interviewers probe</h3>
+<ul>
+  <li>Exactly how you deploy to Kubernetes (manifests, Helm, <code>set image</code>) and whether you used readiness probes.</li>
+  <li>How the pipeline authenticates to the cloud: OIDC federated credentials &gt; service principal secret &gt; hard-coded (red flag). How the cluster pulls from the registry.</li>
+  <li>Security scanning (Trivy, Defender, Dependabot) — or say it was the next step.</li>
+  <li>Database changes must be backward-compatible so rollback stays safe.</li>
+  <li>Speeding up a slow pipeline: dependency and layer caching, parallel jobs, running only affected tests.</li>
+</ul>
+<div class="key">Only name tools you actually used. Every name you say is a follow-up question.</div>
+
+<h2 id="plan">10. 7-day plan</h2>
+<div class="wrap"><table>
+<tr><th>Day</th><th>Focus</th></tr>
+<tr><td>1–2</td><td>Jira deep dive in a free Cloud site: workflow, schemes, automation (lab steps 0–7)</td></tr>
+<tr><td>3</td><td>Confluence and Bitbucket on free tiers</td></tr>
+<tr><td>4</td><td>Jenkins in Docker, one Jenkinsfile; Bamboo concepts</td></tr>
+<tr><td>5</td><td>Artifactory concepts; one Python script against the Jira REST API</td></tr>
+<tr><td>6</td><td>ITIL basics; 4–5 STAR stories mapped to the role</td></tr>
+<tr><td>7</td><td>Mock interview and revision</td></tr>
+</table></div>
+<p>Be honest about which tools you've administered and which you've practised. "I built this hands-on and can explain it in depth" beats a claim that breaks under follow-up questions.</p>
+
+<footer><a href="../">Back to guides</a></footer>
+</body>
+</html>
