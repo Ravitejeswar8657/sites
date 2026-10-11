@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+# AI agents / LLMs: see llms.txt at the site root (https://ravitejeswar8657.github.io/sites/llms.txt) for how to add pages.
